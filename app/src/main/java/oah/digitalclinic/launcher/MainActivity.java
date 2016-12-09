@@ -11,6 +11,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
@@ -21,7 +22,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
     }*/
 
-    //public WebView mWebView = null;
+    public WebView mWebView = null;
    public static final String ACTION_SCAN = "com.google.zxing.client.android.SCAN";
 
     @Override
@@ -32,17 +33,17 @@ public class MainActivity extends AppCompatActivity {
     }
 
     //product barcode mode
-    public void scanBar(View v) {
-        try {
-            //start the scanning activity from the com.google.zxing.client.android.SCAN intent
-            Intent intent = new Intent(ACTION_SCAN);
-            intent.putExtra("SCAN_MODE", "PRODUCT_MODE");
-            startActivityForResult(intent, 0);
-        } catch (ActivityNotFoundException anfe) {
-            //on catch, show the download dialog
-          showDialog(this, "No Scanner Found", "Download a scanner code activity?", "Yes", "No").show();
-        }
-    }
+//    public void scanBar(View v) {
+//        try {
+//            //start the scanning activity from the com.google.zxing.client.android.SCAN intent
+//            Intent intent = new Intent(ACTION_SCAN);
+//            intent.putExtra("SCAN_MODE", "PRODUCT_MODE");
+//            startActivityForResult(intent, 0);
+//        } catch (ActivityNotFoundException anfe) {
+//            //on catch, show the download dialog
+//          showDialog(this, "No Scanner Found", "Download a scanner code activity?", "Yes", "No").show();
+//        }
+//    }
 
     //product qr code mode
     public void scanQR(View v) {
@@ -90,10 +91,14 @@ public class MainActivity extends AppCompatActivity {
                 Toast toast = Toast.makeText(this, "Content:" + contents + " Format:" + format, Toast.LENGTH_LONG);
                 toast.show();
 
-                Intent httpIntent = new Intent(Intent.ACTION_VIEW);
-                httpIntent.setData(Uri.parse(contents));
-
-                startActivity(httpIntent);
+                mWebView = (WebView) findViewById(R.id.webView);
+                mWebView.getSettings().setJavaScriptEnabled(true);
+                mWebView.setWebViewClient(new WebViewClient());
+                mWebView.loadUrl(contents);
+//                Intent httpIntent = new Intent(Intent.ACTION_VIEW);
+//                httpIntent.setData(Uri.parse(contents));
+//
+//                startActivity(httpIntent);
             }
         }
     }

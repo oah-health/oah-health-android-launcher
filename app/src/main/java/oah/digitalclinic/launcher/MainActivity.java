@@ -9,6 +9,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.View;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -85,7 +86,24 @@ public class MainActivity extends AppCompatActivity {
         });
         return downloadDialog.show();
     }
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if(event.getAction() == KeyEvent.ACTION_DOWN){
+            switch(keyCode)
+            {
 
+                case KeyEvent.KEYCODE_BACK:
+                    if(mWebView.canGoBack() == true){
+                        mWebView.goBack();
+                    }else{
+                        finish();
+                    }
+                    return true;
+            }
+
+        }
+        return super.onKeyDown(keyCode, event);
+    }
     //on ActivityResult method
     public void onActivityResult(int requestCode, int resultCode, Intent intent) {
         if (requestCode == 0) {
@@ -100,6 +118,8 @@ public class MainActivity extends AppCompatActivity {
                 mWebView.getSettings().setJavaScriptEnabled(true);
                 mWebView.setWebViewClient(new WebViewClient());
                 mWebView.loadUrl(contents);
+
+
 //                Intent httpIntent = new Intent(Intent.ACTION_VIEW);
 //                httpIntent.setData(Uri.parse(contents));
 //
